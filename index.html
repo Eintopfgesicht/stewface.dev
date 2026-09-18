@@ -2,14 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#020812">
+  <meta name="description" content="STEWFACE.DEV — Development & Support Infrastructure. Public technical services and product resources.">
   <title>STEWFACE.DEV</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      background: #020812;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #020812;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      overflow: hidden;
+    }
+
+    .hero {
+      position: fixed;
+      inset: 0;
+      background:
+        #020812
+        url("/assets/stewface-dev-hero.webp")
+        center center / cover
+        no-repeat;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-aspect-ratio: 4/5) {
+      .hero {
+        background-size: auto 100%;
+        background-position: 50% 50%;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .hero {
+        animation: reveal 700ms ease-out both;
+      }
+
+      @keyframes reveal {
+        from {
+          opacity: 0;
+          transform: scale(1.005);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    }
+  </style>
 </head>
 <body>
-  <main>
-    <h1>STEWFACE.DEV</h1>
-    <p>Development &amp; Support Infrastructure</p>
-    <p>Public technical services and product resources.</p>
+  <main class="hero" role="img" aria-label="STEWFACE.DEV — Development & Support Infrastructure">
+    <div class="sr-only">
+      <h1>STEWFACE.DEV</h1>
+      <p>Development &amp; Support Infrastructure</p>
+      <p>Public technical services and product resources.</p>
+    </div>
   </main>
 </body>
 </html>
