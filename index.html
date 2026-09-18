@@ -7,38 +7,150 @@
   <meta name="description" content="STEWFACE.DEV — Development & Support Infrastructure. Public technical services and product resources.">
   <title>STEWFACE.DEV</title>
   <style>
-    :root { color-scheme: dark; background: #020812; }
+    :root {
+      color-scheme: dark;
+      background: #020812;
+      --cyan: #15c8ff;
+      --white: #f5fbff;
+      --muted: #b9cfdf;
+    }
+
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       width: 100%;
       min-height: 100%;
       background: #020812;
     }
+
     body {
       min-height: 100vh;
       min-height: 100svh;
       overflow: hidden;
+      font-family: "Segoe UI", Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
+
     .hero {
       position: fixed;
       inset: 0;
-      background: #020812;
+      display: grid;
+      place-items: start center;
       overflow: hidden;
+      background: #020812;
+      isolation: isolate;
     }
-    .hero__image {
+
+    .hero::before {
+      content: "";
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      opacity: 0;
-      transition: opacity 450ms ease-out;
-      user-select: none;
-      -webkit-user-drag: none;
+      z-index: -2;
+      background:
+        url("/assets/stewface-dev-hero.webp?v=3")
+        center center / cover
+        no-repeat;
+      transform: scale(1.001);
     }
-    .hero__image.is-ready { opacity: 1; }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg,
+          rgba(1, 7, 15, 0.18) 0%,
+          rgba(1, 7, 15, 0.06) 22%,
+          rgba(1, 7, 15, 0.00) 52%,
+          rgba(1, 7, 15, 0.10) 100%),
+        radial-gradient(
+          ellipse at 50% 20%,
+          rgba(0, 5, 12, 0.16) 0%,
+          rgba(0, 5, 12, 0.06) 46%,
+          rgba(0, 5, 12, 0.00) 72%
+        );
+      pointer-events: none;
+    }
+
+    .brand {
+      margin-top: clamp(44px, 7.5vh, 92px);
+      width: min(92vw, 1120px);
+      text-align: center;
+      user-select: none;
+    }
+
+    .title {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(3rem, 6.8vw, 7.6rem);
+      font-weight: 800;
+      line-height: 0.93;
+      letter-spacing: 0.115em;
+      text-indent: 0.115em;
+      text-transform: uppercase;
+      text-shadow:
+        0 2px 0 rgba(255,255,255,0.12),
+        0 8px 30px rgba(0,0,0,0.58);
+      white-space: nowrap;
+    }
+
+    .title .dev {
+      color: var(--cyan);
+      text-shadow:
+        0 0 28px rgba(21, 200, 255, 0.22),
+        0 8px 30px rgba(0,0,0,0.58);
+    }
+
+    .subtitle {
+      margin: clamp(14px, 2vh, 24px) 0 0;
+      color: #edf7ff;
+      font-size: clamp(0.78rem, 1.42vw, 1.45rem);
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: clamp(0.22em, 0.43vw, 0.52em);
+      text-indent: clamp(0.22em, 0.43vw, 0.52em);
+      text-transform: uppercase;
+      text-shadow: 0 4px 18px rgba(0,0,0,0.72);
+      white-space: nowrap;
+    }
+
+    .descriptor {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(14px, 2vw, 28px);
+      margin: clamp(18px, 2.4vh, 30px) auto 0;
+      width: min(76vw, 820px);
+      color: var(--muted);
+      font-size: clamp(0.68rem, 1.08vw, 1rem);
+      font-weight: 500;
+      letter-spacing: clamp(0.08em, 0.17vw, 0.18em);
+      text-shadow: 0 3px 16px rgba(0,0,0,0.85);
+    }
+
+    .descriptor::before,
+    .descriptor::after {
+      content: "";
+      height: 1px;
+      flex: 1 1 140px;
+      max-width: 180px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(21, 200, 255, 0.9)
+      );
+      box-shadow: 0 0 10px rgba(21, 200, 255, 0.16);
+    }
+
+    .descriptor::after {
+      background: linear-gradient(
+        90deg,
+        rgba(21, 200, 255, 0.9),
+        transparent
+      );
+    }
+
     .sr-only {
       position: absolute;
       width: 1px;
@@ -50,51 +162,72 @@
       white-space: nowrap;
       border: 0;
     }
-    @media (max-aspect-ratio: 4/5) {
-      .hero__image {
-        object-fit: cover;
-        object-position: 50% 50%;
+
+    @media (max-width: 760px) {
+      .brand {
+        margin-top: clamp(28px, 6vh, 56px);
+        width: 94vw;
+      }
+
+      .title {
+        font-size: clamp(2rem, 10.5vw, 4rem);
+        letter-spacing: 0.07em;
+        text-indent: 0.07em;
+      }
+
+      .subtitle {
+        white-space: normal;
+        font-size: clamp(0.66rem, 2.8vw, 0.95rem);
+        letter-spacing: 0.20em;
+        text-indent: 0;
+      }
+
+      .descriptor {
+        width: min(88vw, 580px);
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        gap: 10px;
+      }
+
+      .descriptor::before,
+      .descriptor::after {
+        min-width: 24px;
+      }
+
+      .hero::before {
+        background-position: 47% center;
       }
     }
-    @media (prefers-reduced-motion: reduce) {
-      .hero__image { transition: none; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .brand {
+        animation: brand-in 700ms cubic-bezier(.2,.7,.2,1) both;
+      }
+
+      @keyframes brand-in {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     }
   </style>
 </head>
 <body>
-  <main class="hero" role="img" aria-label="STEWFACE.DEV — Development & Support Infrastructure">
-    <img id="hero-image" class="hero__image" alt="" aria-hidden="true">
+  <main class="hero">
+    <section class="brand" aria-labelledby="stewface-title">
+      <h1 class="title" id="stewface-title">STEWFACE<span class="dev">.DEV</span></h1>
+      <p class="subtitle">Development &amp; Support Infrastructure</p>
+      <div class="descriptor">Public technical services and product resources.</div>
+    </section>
+
     <div class="sr-only">
-      <h1>STEWFACE.DEV</h1>
-      <p>Development &amp; Support Infrastructure</p>
-      <p>Public technical services and product resources.</p>
+      Technical infrastructure for Stewface products, public services, documentation and support resources.
     </div>
   </main>
-  <script>
-    (() => {
-      const parts = [
-        "/assets/hero/part-0.b64?v=2",
-        "/assets/hero/part-1.b64?v=2",
-        "/assets/hero/part-2.b64?v=2",
-        "/assets/hero/part-3.b64?v=2"
-      ];
-
-      Promise.all(parts.map(async (path) => {
-        const response = await fetch(path, { cache: "no-store" });
-        if (!response.ok) {
-          throw new Error("Hero asset request failed: " + path + " (" + response.status + ")");
-        }
-        return (await response.text()).trim();
-      }))
-      .then((chunks) => {
-        const image = document.getElementById("hero-image");
-        image.addEventListener("load", () => image.classList.add("is-ready"), { once: true });
-        image.src = "data:image/webp;base64," + chunks.join("");
-      })
-      .catch((error) => {
-        console.error("STEWFACE.DEV hero failed to load.", error);
-      });
-    })();
-  </script>
 </body>
 </html>
