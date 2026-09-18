@@ -7,38 +7,38 @@
   <meta name="description" content="STEWFACE.DEV — Development & Support Infrastructure. Public technical services and product resources.">
   <title>STEWFACE.DEV</title>
   <style>
-    :root {
-      color-scheme: dark;
-      background: #020812;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
+    :root { color-scheme: dark; background: #020812; }
+    * { box-sizing: border-box; }
+    html, body {
       margin: 0;
+      width: 100%;
       min-height: 100%;
       background: #020812;
     }
-
     body {
       min-height: 100vh;
       min-height: 100svh;
       overflow: hidden;
     }
-
     .hero {
       position: fixed;
       inset: 0;
-      background:
-        #020812
-        url("/assets/stewface-dev-hero.webp")
-        center center / cover
-        no-repeat;
+      background: #020812;
+      overflow: hidden;
     }
-
+    .hero__image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      opacity: 0;
+      transition: opacity 450ms ease-out;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .hero__image.is-ready { opacity: 1; }
     .sr-only {
       position: absolute;
       width: 1px;
@@ -50,39 +50,51 @@
       white-space: nowrap;
       border: 0;
     }
-
     @media (max-aspect-ratio: 4/5) {
-      .hero {
-        background-size: auto 100%;
-        background-position: 50% 50%;
+      .hero__image {
+        object-fit: cover;
+        object-position: 50% 50%;
       }
     }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .hero {
-        animation: reveal 700ms ease-out both;
-      }
-
-      @keyframes reveal {
-        from {
-          opacity: 0;
-          transform: scale(1.005);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
+    @media (prefers-reduced-motion: reduce) {
+      .hero__image { transition: none; }
     }
   </style>
 </head>
 <body>
   <main class="hero" role="img" aria-label="STEWFACE.DEV — Development & Support Infrastructure">
+    <img id="hero-image" class="hero__image" alt="" aria-hidden="true">
     <div class="sr-only">
       <h1>STEWFACE.DEV</h1>
       <p>Development &amp; Support Infrastructure</p>
       <p>Public technical services and product resources.</p>
     </div>
   </main>
+  <script>
+    (() => {
+      const parts = [
+        "/assets/hero/part-0.b64?v=2",
+        "/assets/hero/part-1.b64?v=2",
+        "/assets/hero/part-2.b64?v=2",
+        "/assets/hero/part-3.b64?v=2"
+      ];
+
+      Promise.all(parts.map(async (path) => {
+        const response = await fetch(path, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Hero asset request failed: " + path + " (" + response.status + ")");
+        }
+        return (await response.text()).trim();
+      }))
+      .then((chunks) => {
+        const image = document.getElementById("hero-image");
+        image.addEventListener("load", () => image.classList.add("is-ready"), { once: true });
+        image.src = "data:image/webp;base64," + chunks.join("");
+      })
+      .catch((error) => {
+        console.error("STEWFACE.DEV hero failed to load.", error);
+      });
+    })();
+  </script>
 </body>
 </html>
