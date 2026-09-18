@@ -2,232 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#020812">
-  <meta name="description" content="STEWFACE.DEV — Development & Support Infrastructure. Public technical services and product resources.">
+  <meta name="description" content="STEWFACE.DEV — Development & Support Infrastructure.">
   <title>STEWFACE.DEV</title>
   <style>
-    :root {
-      color-scheme: dark;
-      background: #020812;
-      --cyan: #15c8ff;
-      --white: #f5fbff;
-      --muted: #b9cfdf;
+    :root{
+      color-scheme:dark;
+      --bg:#020812;
+      --bg2:#061426;
+      --cyan:#18c9ff;
+      --text:#f4f9ff;
+      --muted:#aac2d6;
     }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      width: 100%;
-      min-height: 100%;
-      background: #020812;
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg)}
+    body{
+      min-height:100vh;
+      min-height:100svh;
+      overflow:hidden;
+      font-family:"Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--text);
     }
-
-    body {
-      min-height: 100vh;
-      min-height: 100svh;
-      overflow: hidden;
-      font-family: "Segoe UI", Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .hero {
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: start center;
-      overflow: hidden;
-      background: #020812;
-      isolation: isolate;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: -2;
+    .page{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:start center;
+      isolation:isolate;
+      overflow:hidden;
       background:
-        url("/assets/stewface-dev-hero.webp?v=3")
-        center center / cover
-        no-repeat;
-      transform: scale(1.001);
+        radial-gradient(circle at 50% 115%,rgba(0,166,255,.14),transparent 34%),
+        radial-gradient(circle at 14% 12%,rgba(0,148,255,.08),transparent 25%),
+        linear-gradient(180deg,#020812 0%,#03101e 52%,#061426 100%);
     }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: -1;
+    .page::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:-2;
+      opacity:.62;
+      background-image:
+        radial-gradient(circle at 8% 14%,rgba(255,255,255,.72) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 21% 38%,rgba(112,205,255,.75) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 33% 9%,rgba(255,255,255,.65) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 43% 29%,rgba(255,255,255,.55) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 57% 17%,rgba(108,204,255,.75) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 68% 41%,rgba(255,255,255,.62) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 79% 12%,rgba(255,255,255,.66) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 91% 31%,rgba(82,193,255,.72) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 73% 67%,rgba(255,255,255,.45) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 17% 73%,rgba(255,255,255,.42) 0 1px,transparent 1.5px);
+    }
+    .page::after{
+      content:"";
+      position:absolute;
+      z-index:-1;
+      width:72vw;
+      height:72vw;
+      max-width:1300px;
+      max-height:1300px;
+      right:-31vw;
+      bottom:-48vw;
+      border-radius:50%;
+      border:1px solid rgba(59,198,255,.24);
+      box-shadow:
+        0 0 80px rgba(0,166,255,.12),
+        inset 0 0 120px rgba(0,166,255,.05);
       background:
-        linear-gradient(180deg,
-          rgba(1, 7, 15, 0.18) 0%,
-          rgba(1, 7, 15, 0.06) 22%,
-          rgba(1, 7, 15, 0.00) 52%,
-          rgba(1, 7, 15, 0.10) 100%),
-        radial-gradient(
-          ellipse at 50% 20%,
-          rgba(0, 5, 12, 0.16) 0%,
-          rgba(0, 5, 12, 0.06) 46%,
-          rgba(0, 5, 12, 0.00) 72%
-        );
-      pointer-events: none;
+        radial-gradient(circle at 34% 26%,rgba(27,137,195,.18),transparent 32%),
+        linear-gradient(145deg,rgba(7,31,54,.7),rgba(2,8,18,.9));
     }
-
-    .brand {
-      margin-top: clamp(44px, 7.5vh, 92px);
-      width: min(92vw, 1120px);
-      text-align: center;
-      user-select: none;
+    .frame{
+      position:absolute;
+      inset:22px;
+      border:1px solid rgba(88,200,255,.11);
+      clip-path:polygon(0 26px,26px 0,calc(100% - 26px) 0,100% 26px,100% calc(100% - 26px),calc(100% - 26px) 100%,26px 100%,0 calc(100% - 26px));
+      pointer-events:none;
     }
-
-    .title {
-      margin: 0;
-      color: var(--white);
-      font-size: clamp(3rem, 6.8vw, 7.6rem);
-      font-weight: 800;
-      line-height: 0.93;
-      letter-spacing: 0.115em;
-      text-indent: 0.115em;
-      text-transform: uppercase;
-      text-shadow:
-        0 2px 0 rgba(255,255,255,0.12),
-        0 8px 30px rgba(0,0,0,0.58);
-      white-space: nowrap;
+    .brand{
+      margin-top:clamp(70px,10vh,120px);
+      width:min(92vw,1180px);
+      text-align:center;
+      user-select:none;
     }
-
-    .title .dev {
-      color: var(--cyan);
-      text-shadow:
-        0 0 28px rgba(21, 200, 255, 0.22),
-        0 8px 30px rgba(0,0,0,0.58);
+    .title{
+      margin:0;
+      font-size:clamp(3.1rem,7.2vw,8rem);
+      line-height:.92;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-indent:.12em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      color:var(--text);
+      text-shadow:0 8px 32px rgba(0,0,0,.62);
     }
-
-    .subtitle {
-      margin: clamp(14px, 2vh, 24px) 0 0;
-      color: #edf7ff;
-      font-size: clamp(0.78rem, 1.42vw, 1.45rem);
-      font-weight: 500;
-      line-height: 1.3;
-      letter-spacing: clamp(0.22em, 0.43vw, 0.52em);
-      text-indent: clamp(0.22em, 0.43vw, 0.52em);
-      text-transform: uppercase;
-      text-shadow: 0 4px 18px rgba(0,0,0,0.72);
-      white-space: nowrap;
+    .title .dev{
+      color:var(--cyan);
+      text-shadow:0 0 28px rgba(24,201,255,.2),0 8px 32px rgba(0,0,0,.62);
     }
-
-    .descriptor {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(14px, 2vw, 28px);
-      margin: clamp(18px, 2.4vh, 30px) auto 0;
-      width: min(76vw, 820px);
-      color: var(--muted);
-      font-size: clamp(0.68rem, 1.08vw, 1rem);
-      font-weight: 500;
-      letter-spacing: clamp(0.08em, 0.17vw, 0.18em);
-      text-shadow: 0 3px 16px rgba(0,0,0,0.85);
+    .subtitle{
+      margin:clamp(18px,2.4vh,28px) 0 0;
+      font-size:clamp(.8rem,1.45vw,1.5rem);
+      line-height:1.35;
+      font-weight:500;
+      letter-spacing:clamp(.22em,.45vw,.54em);
+      text-indent:clamp(.22em,.45vw,.54em);
+      text-transform:uppercase;
+      color:#edf7ff;
+      white-space:nowrap;
     }
-
-    .descriptor::before,
-    .descriptor::after {
-      content: "";
-      height: 1px;
-      flex: 1 1 140px;
-      max-width: 180px;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(21, 200, 255, 0.9)
-      );
-      box-shadow: 0 0 10px rgba(21, 200, 255, 0.16);
+    .descriptor{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:clamp(16px,2vw,28px);
+      width:min(78vw,860px);
+      margin:clamp(20px,2.6vh,32px) auto 0;
+      font-size:clamp(.68rem,1vw,.98rem);
+      letter-spacing:clamp(.08em,.16vw,.18em);
+      color:var(--muted);
     }
-
-    .descriptor::after {
-      background: linear-gradient(
-        90deg,
-        rgba(21, 200, 255, 0.9),
-        transparent
-      );
+    .descriptor::before,.descriptor::after{
+      content:"";
+      height:1px;
+      flex:1 1 140px;
+      max-width:190px;
+      background:linear-gradient(90deg,transparent,rgba(24,201,255,.85));
+      box-shadow:0 0 12px rgba(24,201,255,.12);
     }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
+    .descriptor::after{
+      background:linear-gradient(90deg,rgba(24,201,255,.85),transparent);
     }
-
-    @media (max-width: 760px) {
-      .brand {
-        margin-top: clamp(28px, 6vh, 56px);
-        width: 94vw;
+    .status{
+      position:absolute;
+      left:36px;
+      bottom:30px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:rgba(199,220,236,.72);
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .status::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#27d8ff;
+      box-shadow:0 0 12px rgba(39,216,255,.72);
+    }
+    @media(max-width:760px){
+      .frame{inset:12px}
+      .brand{margin-top:clamp(52px,9vh,82px)}
+      .title{
+        font-size:clamp(2.15rem,11vw,4.2rem);
+        letter-spacing:.07em;
+        text-indent:.07em;
       }
-
-      .title {
-        font-size: clamp(2rem, 10.5vw, 4rem);
-        letter-spacing: 0.07em;
-        text-indent: 0.07em;
+      .subtitle{
+        white-space:normal;
+        font-size:clamp(.67rem,2.8vw,.95rem);
+        letter-spacing:.2em;
+        text-indent:0;
       }
-
-      .subtitle {
-        white-space: normal;
-        font-size: clamp(0.66rem, 2.8vw, 0.95rem);
-        letter-spacing: 0.20em;
-        text-indent: 0;
+      .descriptor{
+        width:min(88vw,580px);
+        font-size:.66rem;
+        gap:10px;
       }
-
-      .descriptor {
-        width: min(88vw, 580px);
-        font-size: 0.66rem;
-        letter-spacing: 0.08em;
-        gap: 10px;
-      }
-
-      .descriptor::before,
-      .descriptor::after {
-        min-width: 24px;
-      }
-
-      .hero::before {
-        background-position: 47% center;
-      }
+      .status{left:24px;bottom:22px}
     }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .brand {
-        animation: brand-in 700ms cubic-bezier(.2,.7,.2,1) both;
-      }
-
-      @keyframes brand-in {
-        from {
-          opacity: 0;
-          transform: translateY(-8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+    @media(prefers-reduced-motion:no-preference){
+      .brand{animation:intro .75s cubic-bezier(.2,.7,.2,1) both}
+      @keyframes intro{
+        from{opacity:0;transform:translateY(-8px)}
+        to{opacity:1;transform:translateY(0)}
       }
     }
   </style>
 </head>
 <body>
-  <main class="hero">
-    <section class="brand" aria-labelledby="stewface-title">
-      <h1 class="title" id="stewface-title">STEWFACE<span class="dev">.DEV</span></h1>
+  <main class="page">
+    <div class="frame" aria-hidden="true"></div>
+
+    <section class="brand" aria-labelledby="brand-title">
+      <h1 id="brand-title" class="title">STEWFACE<span class="dev">.DEV</span></h1>
       <p class="subtitle">Development &amp; Support Infrastructure</p>
       <div class="descriptor">Public technical services and product resources.</div>
     </section>
 
-    <div class="sr-only">
-      Technical infrastructure for Stewface products, public services, documentation and support resources.
-    </div>
+    <div class="status">Infrastructure online</div>
   </main>
 </body>
 </html>
