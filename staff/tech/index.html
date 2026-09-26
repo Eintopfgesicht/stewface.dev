@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src https://claim-api.stewface.dev; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+  <meta name="theme-color" content="#020812">
+  <title>STEWFACE.DEV // TECH SUPPORT</title>
+  <style>
+    :root{color-scheme:dark;--bg:#020812;--panel:#071522;--line:#17455c;--cyan:#18c9ff;--text:#f4f9ff;--muted:#9db6c9;--ok:#5ce1a4;--bad:#ff8f8f}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 120%,#0b2a42 0,transparent 40%),var(--bg);color:var(--text);font-family:"Segoe UI",Inter,system-ui,sans-serif}
+    main{width:min(92vw,920px);margin:0 auto;padding:clamp(3rem,8vh,6rem) 0}
+    .eyebrow{color:var(--cyan);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+    h1{margin:.5rem 0 .35rem;font-size:clamp(2rem,5vw,4.5rem);letter-spacing:.06em}
+    .lead{margin:0;color:var(--muted);line-height:1.55}
+    .panel{margin-top:2rem;padding:1.4rem;border:1px solid var(--line);background:linear-gradient(180deg,rgba(12,35,53,.9),rgba(5,18,29,.94));box-shadow:0 20px 70px rgba(0,0,0,.32)}
+    .status{display:flex;align-items:center;gap:.75rem;font-weight:700}
+    .dot{width:.7rem;height:.7rem;border-radius:50%;background:var(--muted)}
+    .dot.ok{background:var(--ok);box-shadow:0 0 16px rgba(92,225,164,.45)}
+    .dot.bad{background:var(--bad)}
+    dl{display:grid;grid-template-columns:max-content 1fr;gap:.7rem 1.2rem;margin:1.5rem 0 0}
+    dt{color:var(--muted)}
+    dd{margin:0;word-break:break-word}
+    .actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem}
+    button{border:1px solid #2a7da2;background:#0d2f43;color:var(--text);padding:.7rem 1rem;font:inherit;font-weight:650;cursor:pointer}
+    button:hover{border-color:var(--cyan)}
+    button:disabled{opacity:.45;cursor:not-allowed}
+    .notice{margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid rgba(92,166,199,.2);color:var(--muted);line-height:1.55}
+    code{color:#bcecff}
+    @media(max-width:620px){dl{grid-template-columns:1fr;gap:.2rem}dd{margin-bottom:.7rem}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">STEWFACE.DEV / STAFF</div>
+    <h1>TECH SUPPORT</h1>
+    <p class="lead">Private staff access. Authorization is issued through the Z.H.A.T.S.I.T. Discord staff flow.</p>
+
+    <section class="panel" aria-live="polite">
+      <div class="status"><span id="dot" class="dot"></span><span id="status">Checking secure staff session…</span></div>
+      <dl id="details" hidden>
+        <dt>Scope</dt><dd id="scope">—</dd>
+        <dt>Verified provider</dt><dd id="provider">—</dd>
+        <dt>Session expires</dt><dd id="expires">—</dd>
+      </dl>
+      <div class="actions">
+        <button id="refresh" type="button">Refresh session status</button>
+        <button id="logout" type="button" disabled>Sign out</button>
+      </div>
+      <div id="notice" class="notice">Do not share staff links. If access is required, use <strong>Open TECH Console</strong> from the current TECH SUPPORT rule card in Discord.</div>
+    </section>
+  </main>
+
+  <script>
+    'use strict';
+    const API='https://claim-api.stewface.dev';
+    const dot=document.getElementById('dot');
+    const status=document.getElementById('status');
+    const details=document.getElementById('details');
+    const scope=document.getElementById('scope');
+    const provider=document.getElementById('provider');
+    const expires=document.getElementById('expires');
+    const notice=document.getElementById('notice');
+    const refresh=document.getElementById('refresh');
+    const logout=document.getElementById('logout');
+
+    function renderSignedOut(message){
+      dot.className='dot bad';
+      status.textContent=message || 'No active TECH SUPPORT session';
+      details.hidden=true;
+      logout.disabled=true;
+      notice.innerHTML='Open <strong>TECH Console</strong> from the current TECH SUPPORT rule card in Discord to request a fresh one-time staff grant.';
+    }
+
+    function renderSignedIn(data){
+      dot.className='dot ok';
+      status.textContent='Authenticated staff session';
+      scope.textContent=String(data.scope || '—');
+      provider.textContent=String(data.provider || '—').toUpperCase();
+      const date=new Date(data.expires_at_utc);
+      expires.textContent=Number.isFinite(date.getTime()) ? date.toLocaleString() : String(data.expires_at_utc || '—');
+      details.hidden=false;
+      logout.disabled=false;
+      notice.textContent='Access is session-bound. A fresh Discord grant rotates the session without requiring the platform provider to be linked again.';
+    }
+
+    async function loadSession(){
+      refresh.disabled=true;
+      try{
+        const response=await fetch(API+'/staff/portal/session',{
+          method:'GET',
+          credentials:'include',
+          headers:{'Accept':'application/json'},
+          cache:'no-store'
+        });
+        if(!response.ok){
+          renderSignedOut(response.status>=500 ? 'Staff authentication service temporarily unavailable' : 'No active TECH SUPPORT session');
+          return;
+        }
+        const data=await response.json();
+        if(data && data.authenticated===true && data.scope==='TECH_SUPPORT'){
+          renderSignedIn(data);
+        }else{
+          renderSignedOut();
+        }
+      }catch{
+        renderSignedOut('Staff authentication service unavailable');
+      }finally{
+        refresh.disabled=false;
+      }
+    }
+
+    async function signOut(){
+      logout.disabled=true;
+      try{
+        await fetch(API+'/staff/portal/session/logout',{
+          method:'POST',
+          credentials:'include',
+          headers:{
+            'Accept':'application/json',
+            'X-Stewface-Staff-Intent':'staff-session-logout-v1'
+          },
+          cache:'no-store'
+        });
+      }finally{
+        renderSignedOut('Signed out');
+      }
+    }
+
+    refresh.addEventListener('click',loadSession);
+    logout.addEventListener('click',signOut);
+    loadSession();
+  </script>
+</body>
+</html>
